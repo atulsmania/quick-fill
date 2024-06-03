@@ -1,6 +1,7 @@
 {
   "manifest_version": 3,
   "name": "QuickFill",
+  "version": "1.0.0",
   "description": "Quickly fill inputs easily by your own mentioned shortcuts",
   "background": { "service_worker": "background.bundle.js" },
   "permissions": ["storage", "activeTab", "scripting"],
