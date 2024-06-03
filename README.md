@@ -22,11 +22,17 @@ A Chrome extension that allows users to save shortcuts as key-value pairs and au
    cd quick-fill
    ```
 
-3. Open Chrome and navigate to `chrome://extensions/`.
+3. Install dependencies: `npm install`
 
-4. Enable "Developer mode" by toggling the switch in the top right corner.
+4. Build the project: `npm run build`
 
-5. Click on "Load unpacked" and select the extension directory.
+5. Open Chrome and navigate to `chrome://extensions/`.
+
+6. Enable "Developer mode" by toggling the switch in the top right corner.
+
+7. Unzip the `quick-fill` extension in zip folder.
+
+8. Click on "Load unpacked" and select unzipped folder.
 
 ## Usage
 
