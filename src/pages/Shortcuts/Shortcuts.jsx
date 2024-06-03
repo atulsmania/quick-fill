@@ -6,9 +6,7 @@ const Shortcuts = () => {
   const [shortcuts, setShortcuts] = useState([]);
 
   useEffect(() => {
-    const data = getShortcutsFromStorage();
-    if (!data?.length) return;
-    setShortcuts(data);
+    getShortcutsFromStorage(setShortcuts);
   }, []);
 
   const handleDelete = (shortcutKey) => {

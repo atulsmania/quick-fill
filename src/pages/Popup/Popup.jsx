@@ -7,6 +7,10 @@ const Popup = () => {
   const [inputKey, setInputKey] = React.useState('');
   const [inputValue, setInputValue] = React.useState('');
 
+  useEffect(() => {
+    getShortcutsFromStorage(setShortcuts);
+  }, []);
+
   const handleAdd = () => {
     const newShortcuts = [...shortcuts, { key: inputKey, value: inputValue }];
     setShortcuts(newShortcuts);
@@ -14,12 +18,6 @@ const Popup = () => {
     setInputKey('');
     setInputValue('');
   };
-
-  useEffect(() => {
-    const data = getShortcutsFromStorage();
-    if (!data?.length) return;
-    setShortcuts(data);
-  }, []);
 
   const isKeyDuplicate = useMemo(() => {
     const keys = shortcuts.map((shortcut) => shortcut.key);

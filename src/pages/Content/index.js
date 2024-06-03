@@ -4,23 +4,16 @@ chrome.storage.local.get([localStorageIdentifier], function (e) {
   chrome.storage.local.set({ [localStorageIdentifier]: [] });
 });
 
-function isElementContentEditableOrInput(element) {
-  if (element.contentEditable === 'true') {
-    return true;
-  }
-
-  if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement) {
-    if (!element.readOnly) {
-      return true;
-    }
-  }
-
+function isElementEditableOrReadOnly(element) {
+  if (!element.readOnly) return true;
+  if (element instanceof HTMLInputElement) return true;
+  if (element instanceof HTMLTextAreaElement) return true;
   return false;
 }
 
 const getEditableElement = (target) => {
   while (target && target !== document) {
-    if (isElementContentEditableOrInput(target)) return target;
+    if (isElementEditableOrReadOnly(target)) return target;
     target = target.parentElement;
   }
   return target;
@@ -29,11 +22,8 @@ const getEditableElement = (target) => {
 document.addEventListener(
   'focusin',
   (e) => {
-    console.log('focused', e.target);
     const editableElement = getEditableElement(e.target);
-    console.log('editableElement', editableElement);
     if (!editableElement || editableElement === document) return;
-    console.log('add event', editableElement);
     addEventListenerOnce(editableElement, 'input', setInputValue);
   },
   { bubbles: true }
@@ -49,7 +39,6 @@ const setInputValue = (e) => {
     e.preventDefault();
 
     const event = new Event('input', { bubbles: true });
-    event.target.value = updatedValue;
     e.target.value = updatedValue;
     e.target.dispatchEvent(event);
   });
@@ -83,12 +72,11 @@ const addEventListenerOnce = (element, eventName, listener) => {
   }
 };
 
-export const getShortcutsFromStorage = () => {
-  let shortcuts = [];
+export const getShortcutsFromStorage = (callback) => {
   chrome.storage.local.get([localStorageIdentifier], function (data) {
-    shortcuts = data[localStorageIdentifier];
+    const shortcuts = data[localStorageIdentifier] || [];
+    callback(shortcuts);
   });
-  return shortcuts;
 };
 
 export const setShortcutsToStorage = (shortcuts) => {

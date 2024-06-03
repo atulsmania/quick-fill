@@ -33,7 +33,7 @@ const Table = (props: TableProps) => {
             <td>{shortcut.value}</td>
             <td>
               <button className="edit-btn" onClick={() => handleDelete(shortcut.key)}>
-                Edit
+                Delete
               </button>
             </td>
           </tr>
