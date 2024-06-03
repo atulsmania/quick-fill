@@ -1,4 +1,4 @@
-# My Chrome Extension
+# QuickFill Chrome Extension
 
 A Chrome extension that allows users to save shortcuts as key-value pairs and automatically replace the keys with their corresponding values when typed in any input field.
 
