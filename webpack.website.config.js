@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   mode: 'development',
@@ -7,34 +8,43 @@ module.exports = {
     index: path.join(__dirname, 'src', 'website', 'index.jsx'),
   },
   output: {
-    filename: 'bundle.js', // Name of the output bundle
-    path: path.resolve(__dirname, 'dist'), // Output directory
-    clean: true, // Cleans the output directory before each build (optional)
+    filename: 'bundle.js',
+    path: path.resolve(__dirname, 'dist'),
+    clean: true,
   },
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/, // Rule for handling JavaScript and JSX files
-        exclude: /node_modules/, // Exclude node_modules folder
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
         use: {
-          loader: 'babel-loader', // Use Babel loader for transpiling
+          loader: 'babel-loader',
           options: {
-            presets: ['@babel/preset-env', '@babel/preset-react'], // Babel presets
+            presets: ['@babel/preset-env', '@babel/preset-react'],
           },
         },
       },
       {
-        test: /\.css$/, // Rule for handling CSS files
-        use: ['style-loader', 'css-loader', 'postcss-loader'], // Loaders for processing CSS
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader', 'postcss-loader'],
       },
     ],
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: './src/website/index.html', // Path to your HTML template
+      template: './src/website/index.html',
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: 'src/website/assets',
+          to: path.join(__dirname, 'dist/assets'),
+          force: true,
+        },
+      ],
     }),
   ],
   resolve: {
-    extensions: ['.js', '.jsx'], // Resolve extensions for import statements
+    extensions: ['.js', '.jsx'],
   },
 };
