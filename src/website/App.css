@@ -1,0 +1,114 @@
+/* App.css */
+body {
+  padding: 0;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f2efe5;
+  color: #333;
+  max-width: 1280px;
+  margin: 0 auto;
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
+.landing-page {
+  text-align: center;
+  padding: 0;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+}
+
+.navbar .logo {
+  font-size: 1.5em;
+  font-weight: bold;
+  text-decoration: none;
+  color: #333;
+}
+
+.navbar nav a {
+  margin: 0 15px;
+  text-decoration: none;
+  color: #333;
+  font-size: 1em;
+}
+
+.hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 80px 20px;
+
+  @media screen and (min-width: 768px) {
+    flex-direction: row;
+  }
+}
+
+.hero-text {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 100%;
+
+  @media screen and (min-width: 768px) {
+    max-width: 50%;
+  }
+}
+
+.hero-text h1 {
+  font-size: 2.5em;
+  margin: 0;
+}
+
+.hero-text p {
+  font-size: 1.2em;
+  margin: 20px 0;
+}
+
+.github-button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #333;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 1.2em;
+  border: 2px solid #333;
+}
+
+.github-button:hover {
+  border-color: #222;
+  background-color: #222;
+}
+
+.source-button {
+  display: inline-block;
+  border: 2px solid #333;
+  padding: 10px 20px;
+  background-color: transparent;
+  color: #333;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 1.2em;
+  margin-left: 10px;
+}
+
+.hero-image {
+  width: 100%;
+  outline: 2px solid #d2d2d2;
+  overflow: hidden;
+  border-radius: 10px;
+
+  max-width: 100%;
+
+  @media screen and (min-width: 768px) {
+    max-width: 40%;
+  }
+}
