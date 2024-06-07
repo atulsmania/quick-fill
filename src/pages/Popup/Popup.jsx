@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo } from 'react';
 import { getShortcutsFromStorage, setShortcutsToStorage } from '../Content';
-import './popup.css';
 
 const Popup = () => {
   const [shortcuts, setShortcuts] = React.useState([]);
@@ -27,32 +26,42 @@ const Popup = () => {
   const isAddShortcutDisabled = inputKey.length === 0 || inputValue.length === 0 || isKeyDuplicate;
 
   return (
-    <main>
-      <div className="header">
+    <main className="p-2 min-w-[300px]">
+      <div className="flex justify-between border-b border-b-neutral">
         <h4>Add Shortcuts</h4>
 
-        <a href="./shortcuts.html" target="_blank" className="view-shortcuts">
+        <a className="link link-hover" href="./shortcuts.html" target="_blank">
           View Shortcuts
         </a>
       </div>
-      <section>
+
+      <section className="mt-2 space-y-2">
         <input
           value={inputKey}
           type="text"
           placeholder="shortcut key"
+          className="w-full max-w-xs input-sm input input-bordered"
           onChange={(e) => setInputKey(e.target.value)}
         />
         <input
           value={inputValue}
           type="text"
+          className="w-full max-w-xs input-sm input input-bordered"
           placeholder="shortcut value"
           onChange={(e) => setInputValue(e.target.value)}
         />
-        <div className="btn-group">
-          <span className="error" style={{ visibility: isKeyDuplicate ? 'visible' : 'hidden' }}>
+        <div className="flex items-center justify-between w-full">
+          <span
+            className="text-error"
+            style={{ visibility: isKeyDuplicate ? 'visible' : 'hidden' }}
+          >
             Duplicate key found!
           </span>
-          <button className="add-shortcut" onClick={handleAdd} disabled={isAddShortcutDisabled}>
+          <button
+            className="btn btn-neutral btn-sm"
+            onClick={handleAdd}
+            disabled={isAddShortcutDisabled}
+          >
             Add
           </button>
         </div>
