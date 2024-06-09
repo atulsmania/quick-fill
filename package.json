@@ -17,6 +17,7 @@
     "serve-web": "webpack serve --config webpack.website.config.js --mode development --open"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.43.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

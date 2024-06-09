@@ -26,7 +26,7 @@ const Popup = () => {
   const isAddShortcutDisabled = inputKey.length === 0 || inputValue.length === 0 || isKeyDuplicate;
 
   return (
-    <main className="p-2 min-w-[300px]">
+    <>
       <div className="flex justify-between border-b border-b-neutral">
         <h4>Add Shortcuts</h4>
 
@@ -66,7 +66,7 @@ const Popup = () => {
           </button>
         </div>
       </section>
-    </main>
+    </>
   );
 };
 
