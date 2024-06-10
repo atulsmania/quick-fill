@@ -30,7 +30,8 @@ export default function Auth({ onUserLoggedIn }) {
     const onResponse = (response) => {
       if (response.action === RESPONSE.SUCCESS) {
         onUserLoggedIn();
-        sendMessage({ action: ACTION.GET_SHORTCUTS }, (res) => {
+        sendMessage({ action: ACTION.GET_SHORTCUTS }, ({ action, res }) => {
+          if (action !== RESPONSE.SUCCESS) return;
           const fetchedShortcuts = res.data[0].data || {};
           setShortcutsToStorage(fetchedShortcuts);
         });
