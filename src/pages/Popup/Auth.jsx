@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ACTION, RESPONSE, sendMessage } from '../utils';
+import { setShortcutsToStorage } from '../Content';
 
 export default function Auth({ onUserLoggedIn }) {
   const [loading, setLoading] = useState(false);
@@ -29,6 +30,10 @@ export default function Auth({ onUserLoggedIn }) {
     const onResponse = (response) => {
       if (response.action === RESPONSE.SUCCESS) {
         onUserLoggedIn();
+        sendMessage({ action: ACTION.GET_SHORTCUTS }, (res) => {
+          const fetchedShortcuts = res.data[0].data || {};
+          setShortcutsToStorage(fetchedShortcuts);
+        });
       } else if (response.action === RESPONSE.ERROR) {
         alert('verifyOtp failed', response.message);
       }
