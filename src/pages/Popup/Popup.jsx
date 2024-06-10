@@ -1,8 +1,9 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import { getShortcutsFromStorage, setShortcutsToStorage } from '../Content';
+import { ACTION, RESPONSE, sendMessage } from '../utils';
 
 const Popup = () => {
-  const [shortcuts, setShortcuts] = React.useState([]);
+  const [shortcuts, setShortcuts] = React.useState({});
   const [inputKey, setInputKey] = React.useState('');
   const [inputValue, setInputValue] = React.useState('');
 
@@ -11,18 +12,25 @@ const Popup = () => {
   }, []);
 
   const handleAdd = () => {
-    const newShortcuts = [...shortcuts, { key: inputKey, value: inputValue }];
-    setShortcuts(newShortcuts);
-    setShortcutsToStorage(newShortcuts);
-    setInputKey('');
-    setInputValue('');
+    sendMessage(
+      {
+        action: ACTION.EDIT_OR_ADD_SHORTCUT,
+        shortcutKey: inputKey,
+        shortcutValue: inputValue,
+      },
+      (res) => {
+        if (res.action === RESPONSE.SUCCESS) {
+          const newShortcuts = { ...shortcuts, [inputKey]: inputValue };
+          setShortcuts(newShortcuts);
+          setShortcutsToStorage(newShortcuts);
+          setInputKey('');
+          setInputValue('');
+        }
+      }
+    );
   };
 
-  const isKeyDuplicate = useMemo(() => {
-    const keys = shortcuts.map((shortcut) => shortcut.key);
-    return keys.includes(inputKey);
-  }, [inputKey, shortcuts]);
-
+  const isKeyDuplicate = inputKey in shortcuts;
   const isAddShortcutDisabled = inputKey.length === 0 || inputValue.length === 0 || isKeyDuplicate;
 
   return (

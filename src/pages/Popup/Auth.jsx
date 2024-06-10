@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ACTION, QUICK_FLL_PORT_NAME, RESPONSE } from '../utils';
+import { ACTION, RESPONSE, sendMessage } from '../utils';
 
 export default function Auth({ onUserLoggedIn }) {
   const [loading, setLoading] = useState(false);
@@ -7,20 +7,10 @@ export default function Auth({ onUserLoggedIn }) {
   const [otp, setOtp] = useState('');
   const [otpSent, setOtpSent] = useState(false);
 
-  const sendMessage = (message = {}, callback = console.log) => {
-    const targetOrigin = chrome.runtime.id;
-    const port = chrome.runtime.connect({ name: QUICK_FLL_PORT_NAME });
-
-    port.onMessage.addListener(callback);
-    port.postMessage(message, targetOrigin);
-  };
-
   const sendOtp = (e) => {
     e.preventDefault();
 
     const onResponse = (response) => {
-      console.log(response);
-
       if (response.action === RESPONSE.SUCCESS) {
         setOtpSent(true);
       } else if (response.action === RESPONSE.ERROR) {
@@ -50,7 +40,7 @@ export default function Auth({ onUserLoggedIn }) {
   };
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col justify-between h-full gap-2">
       <p className="text-base">Sign in with Otp</p>
       {!otpSent ? (
         <form className="w-full space-y-2" onSubmit={sendOtp}>

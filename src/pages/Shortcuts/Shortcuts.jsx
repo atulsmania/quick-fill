@@ -1,10 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Table from '../../components/Table';
 import { getShortcutsFromStorage, setShortcutsToStorage } from '../Content';
+import { ACTION, RESPONSE, sendMessage } from '../utils';
 
 const Shortcuts = () => {
-  const [shortcuts, setShortcuts] = useState([]);
-  const [inputKey, setInputKey] = useState('');
+  const [shortcuts, setShortcuts] = useState({});
   const [inputValue, setInputValue] = useState('');
   const editingShortcutKey = useRef(null);
 
@@ -13,41 +13,54 @@ const Shortcuts = () => {
   }, []);
 
   const handleDelete = (shortcutKey) => {
-    const newShortcuts = shortcuts.filter((shortcut) => shortcut.key !== shortcutKey);
+    const newShortcuts = { ...shortcuts };
+    delete newShortcuts[shortcutKey];
     setShortcuts(newShortcuts);
     setShortcutsToStorage(newShortcuts);
   };
 
-  const handleEdit = (shortcutKey) => {
+  const openEditModal = (shortcutKey) => {
     editingShortcutKey.current = shortcutKey;
-    setInputKey(shortcutKey);
-    setInputValue(shortcuts.find((shortcut) => shortcut.key === shortcutKey).value || '');
+    setInputValue(shortcuts[shortcutKey] || '');
     document.getElementById('edit_modal').showModal();
   };
 
-  const handleUpdateShortcut = () => {
-    const newShortcuts = shortcuts.map((shortcut) => {
-      if (shortcut.key === editingShortcutKey.current) {
-        return { key: inputKey, value: inputValue };
+  const handleEditShortcut = () => {
+    if (!editingShortcutKey.current) return;
+    sendMessage(
+      {
+        action: ACTION.EDIT_OR_ADD_SHORTCUT,
+        shortcutKey: editingShortcutKey.current,
+        shortcutValue: inputValue,
+      },
+      (res) => {
+        if (res.action === RESPONSE.SUCCESS) {
+          const newShortcuts = { ...shortcuts };
+          newShortcuts[editingShortcutKey.current] = inputValue;
+          setShortcuts(newShortcuts);
+          setShortcutsToStorage(newShortcuts);
+          document.getElementById('edit_modal').close();
+        }
       }
-      return shortcut;
-    });
-    setShortcuts(newShortcuts);
-    setShortcutsToStorage(newShortcuts);
-    document.getElementById('edit_modal').close();
+    );
   };
+
+  const shortcutAsArray = useMemo(() => {
+    const shortcutKeys = Object.keys(shortcuts);
+    return shortcutKeys.map((key) => ({ key, value: shortcuts[key] }));
+  }, [shortcuts]);
 
   return (
     <div className="container py-6 mx-auto">
       <h1 className="px-4 text-4xl font-semibold text-center">Your Shortcuts</h1>
-      <Table list={shortcuts} handleDelete={handleDelete} handleEdit={handleEdit} />
+      <Table list={shortcutAsArray} handleDelete={handleDelete} handleEdit={openEditModal} />
 
       <dialog id="edit_modal" className="modal">
         <div className="flex flex-col gap-4 modal-box">
           <input
             type="text"
-            onChange={(e) => setInputKey(e.target.value)}
-            value={inputKey}
+            disabled
+            value={editingShortcutKey.current}
             className="w-full input input-bordered"
           />
           <input
@@ -60,7 +73,11 @@ const Shortcuts = () => {
             <form method="dialog">
               <button className="btn btn-default">Cancel</button>
             </form>
-            <button onClick={handleUpdateShortcut} className="btn btn-neutral">
+            <button
+              onClick={handleEditShortcut}
+              disabled={editingShortcutKey.current?.length === 0 || inputValue.length === 0}
+              className="btn btn-neutral"
+            >
               Save
             </button>
           </div>

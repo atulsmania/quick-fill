@@ -44,18 +44,11 @@ const setInputValue = (e) => {
   });
 };
 
-const getUpdatedValue = (inputValue, mappings) => {
+const getUpdatedValue = (inputValue = '', mappings = {}) => {
   const [key] = inputValue.match(new RegExp(/\.\w+$/g)) ?? [null];
   if (!key) return inputValue;
-  if (key) {
-    mappings.find((shortcut) => {
-      if (`.${shortcut.key}` === key) {
-        inputValue = inputValue.replace(key, shortcut.value);
-        return true;
-      }
-      return false;
-    });
-  }
+  const inputKey = key.slice(1);
+  if (inputKey in mappings) return mappings[inputKey];
   return inputValue;
 };
 
@@ -74,7 +67,7 @@ const addEventListenerOnce = (element, eventName, listener) => {
 
 export const getShortcutsFromStorage = (callback) => {
   chrome.storage.local.get([localStorageIdentifier], function (data) {
-    const shortcuts = data[localStorageIdentifier] || [];
+    const shortcuts = data[localStorageIdentifier] || {};
     callback(shortcuts);
   });
 };
