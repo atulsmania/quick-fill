@@ -22,15 +22,23 @@ chrome.runtime.onConnect.addListener((port) => {
           .catch((err) => port.postMessage({ action: RESPONSE.ERROR, err }));
       }
 
-      if (message.action === ACTION.GET_SHORTCUTS) {
+      if (message.action === ACTION.CREATE_SHORTCUT_ENTRY) {
         supabase.auth.getUser().then((res) => {
           const user = res.data.user;
 
           supabase
             .from('Shortcuts')
-            .select('data')
-            .eq('user_id', user.id)
-            .limit(1)
+            .insert({ user_id: user.id, data: {} })
+            .then((res) => port.postMessage({ action: RESPONSE.SUCCESS, res }))
+            .catch((err) => port.postMessage({ action: RESPONSE.ERROR, err }));
+        });
+      }
+
+      if (message.action === ACTION.GET_SHORTCUTS) {
+        supabase.auth.getUser().then((res) => {
+          const user = res.data.user;
+          supabase
+            .rpc('get_or_create_shortcut', { user_id: user.id })
             .then((res) => port.postMessage({ action: RESPONSE.SUCCESS, res }))
             .catch((err) => port.postMessage({ action: RESPONSE.ERROR, err }));
         });
