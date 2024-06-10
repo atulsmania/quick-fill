@@ -51,6 +51,21 @@ chrome.runtime.onConnect.addListener((port) => {
             .catch((err) => port.postMessage({ action: RESPONSE.ERROR, err }));
         });
       }
+
+      if (message.action === ACTION.DELETE_SHORTCUT) {
+        const { shortcutKey } = message;
+        supabase.auth.getUser().then((res) => {
+          const user = res.data.user;
+
+          supabase
+            .rpc('delete_shortcut_entry', {
+              shortcut_key: shortcutKey,
+              user_id: user.id,
+            })
+            .then((res) => port.postMessage({ action: RESPONSE.SUCCESS, res }))
+            .catch((err) => port.postMessage({ action: RESPONSE.ERROR, err }));
+        });
+      }
     });
   }
 });

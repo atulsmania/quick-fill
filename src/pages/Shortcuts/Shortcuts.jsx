@@ -13,10 +13,14 @@ const Shortcuts = () => {
   }, []);
 
   const handleDelete = (shortcutKey) => {
-    const newShortcuts = { ...shortcuts };
-    delete newShortcuts[shortcutKey];
-    setShortcuts(newShortcuts);
-    setShortcutsToStorage(newShortcuts);
+    sendMessage({ action: ACTION.DELETE_SHORTCUT, shortcutKey }, (res) => {
+      if (res.action === RESPONSE.SUCCESS) {
+        const newShortcuts = { ...shortcuts };
+        delete newShortcuts[shortcutKey];
+        setShortcuts(newShortcuts);
+        setShortcutsToStorage(newShortcuts);
+      }
+    });
   };
 
   const openEditModal = (shortcutKey) => {
